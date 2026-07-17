@@ -1,0 +1,89 @@
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+// en v7 la url no va en este arch schema.prisma sino en "prisma.conf.ts dentro de data source o creado el artibuto source"
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// models //
+
+model Teacher { 
+  id          Int      @id  @default(autoincrement()) // @ = atributo de campo (Field Attribute)
+  name        String 
+  lastNme     String   @map("last_name")
+  email       String
+  subjects    Subject[] // el [] un prof (1) -> muchas mat (N) -- "Este registro único (1) es dueño de un montón de hijos (N)""
+  createdAt   DateTime @default(now())  @map("created_at")
+  updatedAt   DateTime @updatedAt       @map("updated_at")
+
+  // reemplazo titulo de tab por su plural
+  @@map("teachers")
+}
+
+model Carnet {
+  id              Int  @id @default(autoincrement())
+  number          Int
+  expirationDay   DateTime 
+
+  student         Student @relation(fields: [studentId], references: [id])
+  studentId Int   @unique
+  @@map("carnets")
+}
+
+// relacion implicita entre Student y Subject
+model Student { 
+  id          Int       @id @default(autoincrement())
+  name        String
+  lastName    String
+  birthDay    DateTime
+  phoneNumber Int?
+  nacionality Int
+  age         Int
+  carnet      Carnet?
+  // subjects Subject[] // implicito - un est (1) -> muchas mat (N)
+  subjects    Enrollment[] // forma explicita
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt()
+  @@map("students")
+}
+
+model Subject { 
+  id            Int         @id @default(autoincrement())
+  name          String
+  code          String
+  teacherId     Int
+  teacher       Teacher     @relation(fields: [teacherId], references: [id]) // esta mat solo puede ser dado por un solo docente (eso es lo que significa en el ejemplo...)
+  //students     Student[] // explicito una mat (1) -> muchos estud (M)
+  students      Enrollment[] // forma explicita
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("subjetcs")  
+}
+// Tabla intermedia para N -> M , "Junction Table", "Join Table" o "Link Table"
+// Tabla explícita (debe tener al menos un campo distinto o novedoso)
+
+model Enrollment {
+  // Lado estudiante
+  studentId      Int
+  student        Student    @relation(fields: [studentId], references: [id])
+
+  subjectId      Int
+  subject        Subject    @relation(fields: [subjectId], references: [id])
+
+  createdAt      DateTime   @default(now())
+  status         String? // solicitud aceptada / negada
+
+  @@id([studentId,subjectId])
+  @@map("enrollments")
+}
+
+
+

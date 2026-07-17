@@ -1,0 +1,23 @@
+{
+  "name": "api-rest-ecommerce",
+  "version": "1.0.0",
+  "description": "Api Rest para el desarrollo de un sition e commerce  ",
+  "license": "ISC",
+  "author": "Pablo Montiron",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.8.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "prisma": "^7.8.0"
+  }
+}

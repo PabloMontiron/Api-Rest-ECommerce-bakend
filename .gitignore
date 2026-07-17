@@ -1,0 +1,6 @@
+node_modules/
+referencias_capturas/
+/generated/prisma
+
+.env
+.env.*

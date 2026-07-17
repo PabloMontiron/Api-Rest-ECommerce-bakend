@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Products & Skus //
+
+model Product { // es Padre - Primario
+  id          String   @id @default(uuid())
+  name        String   
+  description String?  
+  basePrice   Decimal  @db.Decimal(8,2) // 8 dig en total, donde 2 son decimales 
+  isActive    Boolean  @default(true)
+
+  // Relacion
+  skus        Sku[] // 1 -> N
+ 
+  // Timestamps de auditoría 
+  createdAt   DateTime  @default(now())  
+  updateAt    DateTime  @updatedAt
+
+  @@map("products")
+}
+
+// representa la prenda física real -- se relaciona con Product (es foraneo)
+
+model Sku { 
+  id         String   @id      @default(uuid())
+  skuCode    String   @unique
+  size       String
+  color      String
+  stockDisp  Int
+  stockMin   Int?
+
+  productId  String // [F.K] escalar, crea esa tabla, ocupa espacio
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade) // data, no ocupa espacio
+
+  // UN SKU PERTENECE A UN CARTITEM?
+  cartItmes  CartItem[] 
+  orderItems OrderItem []
+  // History
+  createdAt  DateTime  @default(now())
+  updateAt   DateTime  @updatedAt
+
+  @@map("skus")
+}
+
+// users & role //
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+model User {
+  id        String    @id @default(uuid())
+  dni       String
+  nameUser  String
+  name      String
+  lastName  String
+  phone     String
+
+  role      Role      @default(CUSTOMER) // Es solo asignacion
+  cart      Cart?     // es en si un campo se user? o mas bien de un USER que es customer?
+  orders    Order[]   // un usario puede tener muchas compras en un periodo de tiempo
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  // falta trabajar permisos, cliente o admin
+  @@map("users")
+}
+
+// cart & cart item //
+
+model Cart {
+  id  String     @id   @default(uuid())
+
+  // Rel 1 a 1. UN usuario tiene UN carrito activo
+  userId String  @unique // FK (ocupa esp, es visible)
+  user   User    @relation(fields: [userId], references: [id]) //relation field (no ocupa esp, no es visible)
+  
+  // Rel 1 a N. UN carrito puede tener MUCHOS items ( prod + SKU )
+  items CartItem[] // viartual field?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("carts")
+}
+
+model CartItem { // se relaciona con el SKU (lo fisico de producto) - y desde alli se puede acceder a Producto para el resto de informacion
+  id       String @id @default(uuid()) 
+  quantity Int    @default(1)
+
+  // relacion cart
+  cartId String
+  cart   Cart @relation(fields: [cartId], references: [id], onDelete: Cascade) 
+
+  // relacion al SKU
+  skuId String
+  sku   Sku @relation(fields: [skuId], references: [id]) // ¿ Por qué no iría onDelate: Cascade ? 
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime  @updatedAt
+
+  @@map("cart_items")
+}
+
+// Orden de compra
+
+enum OrderStatus {
+  PENDING
+  PAID
+  CANCELED
+  COMPLETED
+  FULFILLED
+}
+
+model Order { // resumen general de compra
+    id      String      @id @default(uuid()) 
+    
+    // a quien pertenece esta compra ? - a ESE user con n id
+    userId   String
+    user     User       @relation(fields: [userId], references: [id])
+
+    // un Order (Padre) puede contener uno o mas order_items(sub-ticktes)
+    items    OrderItem []
+
+    // cuanto gasto?
+    amount   Decimal     @db.Decimal(8,2)
+
+    // Estado de la compra  (pendiente - pagao, caneclado, finalizado)
+    status   OrderStatus @default(PENDING)
+
+    // Crecion
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+       
+  @@map("orders")
+}
+
+model OrderItem { // lo entiendo como el total por cada item grupo de items del mismo tipo
+  id         String  @id @default(uuid())
+
+  quantity   Int     @default(1)
+
+  // congelo precio
+  priceUnity Decimal @db.Decimal(8,2)
+
+  // relacion con la orden padre
+  orderId    String
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade) // relation field
+
+  skuId      String
+  sku        Sku     @relation(fields: [skuId], references: [id]) // relation field
+
+  @@map("order_items")
+}
