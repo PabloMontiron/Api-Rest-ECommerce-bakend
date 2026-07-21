@@ -1,8 +1,4 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
+// x -- x //
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -22,7 +18,7 @@ model Product { // es Padre - Primario
   isActive    Boolean  @default(true)
 
   // Relacion
-  skus        Sku[] // 1 -> N
+  skus        Sku[] // 1 -> N // modelado desde RAM (los datos vienen del servidor de postgre)
  
   // Timestamps de auditoría 
   createdAt   DateTime  @default(now())  
@@ -41,8 +37,8 @@ model Sku {
   stockDisp  Int
   stockMin   Int?
 
-  productId  String // [F.K] escalar, crea esa tabla, ocupa espacio
-  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade) // data, no ocupa espacio
+  productId  String // [F.K] escalar, crea una tabla con ese id de refercia 
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade) // data, no ocupa espacio. Verlo como un "cordon" que relaciona dos "objetos" separados entre si.
 
   // UN SKU PERTENECE A UN CARTITEM?
   cartItmes  CartItem[] 
@@ -82,34 +78,34 @@ model User {
 // cart & cart item //
 
 model Cart {
-  id  String     @id   @default(uuid())
+  id        String    @id   @default(uuid())
 
   // Rel 1 a 1. UN usuario tiene UN carrito activo
-  userId String  @unique // FK (ocupa esp, es visible)
-  user   User    @relation(fields: [userId], references: [id]) //relation field (no ocupa esp, no es visible)
+  userId    String    @unique // FK (ocupa esp, es visible)
+  user      User      @relation(fields: [userId], references: [id]) //relation field (no ocupa esp, no es visible)
   
   // Rel 1 a N. UN carrito puede tener MUCHOS items ( prod + SKU )
-  items CartItem[] // viartual field?
+  items     CartItem[] // 
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@map("carts")
 }
 
-model CartItem { // se relaciona con el SKU (lo fisico de producto) - y desde alli se puede acceder a Producto para el resto de informacion
-  id       String @id @default(uuid()) 
-  quantity Int    @default(1)
+model       CartItem { // se relaciona con el SKU (lo fisico de producto) - y desde alli se puede acceder a Producto para el resto de informacion
+  id        String    @id @default(uuid()) 
+  quantity  Int       @default(1)
 
   // relacion cart
-  cartId String
-  cart   Cart @relation(fields: [cartId], references: [id], onDelete: Cascade) 
+  cartId    String    // FK - lo "une a su carrito correspondiente"
+  cart      Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade) 
 
   // relacion al SKU
-  skuId String
-  sku   Sku @relation(fields: [skuId], references: [id]) // ¿ Por qué no iría onDelate: Cascade ? 
+  skuId     String
+  sku       Sku       @relation(fields: [skuId], references: [id]) // ¿ Por qué no iría onDelate: Cascade ? 
 
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   updateAt  DateTime  @updatedAt
 
   @@map("cart_items")
@@ -126,35 +122,28 @@ enum OrderStatus {
 }
 
 model Order { // resumen general de compra
-    id      String      @id @default(uuid()) 
+    id      String        @id @default(uuid()) 
+  
+    userId   String // pregunta importante userId seía FK de user ?
+    user     User         @relation(fields: [userId], references: [id]) // traeme el user con id "userId"
+    items    OrderItem [] // un Order (Padre) puede contener uno o mas order_items(sub-ticktes)
+
+    amount   Decimal      @db.Decimal(8,2) // en el order superior va el total gral.
+
+    status   OrderStatus  @default(PENDING) // Estado de la compra  (pendiente - pagao, caneclado, finalizado)
     
-    // a quien pertenece esta compra ? - a ESE user con n id
-    userId   String
-    user     User       @relation(fields: [userId], references: [id])
-
-    // un Order (Padre) puede contener uno o mas order_items(sub-ticktes)
-    items    OrderItem []
-
-    // cuanto gasto?
-    amount   Decimal     @db.Decimal(8,2)
-
-    // Estado de la compra  (pendiente - pagao, caneclado, finalizado)
-    status   OrderStatus @default(PENDING)
-
-    // Crecion
-    createdAt DateTime   @default(now())
-    updatedAt DateTime   @updatedAt
+    createdAt  DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
        
   @@map("orders")
 }
 
 model OrderItem { // lo entiendo como el total por cada item grupo de items del mismo tipo
-  id         String  @id @default(uuid())
+  id         String  @id @default(uuid()) // order_item_di 4
 
-  quantity   Int     @default(1)
+  quantity   Int     @default(1) // ej cant = 3
 
-  // congelo precio
-  priceUnity Decimal @db.Decimal(8,2)
+  priceUnity Decimal @db.Decimal(8,2)   // congelo precio
 
   // relacion con la orden padre
   orderId    String
@@ -165,3 +154,5 @@ model OrderItem { // lo entiendo como el total por cada item grupo de items del 
 
   @@map("order_items")
 }
+
+// -- //
