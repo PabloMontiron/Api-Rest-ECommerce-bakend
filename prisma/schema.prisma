@@ -10,24 +10,22 @@ datasource db {
 
 // Products & Skus //
 
-model Product { // es Padre - Primario
+model Product { 
   id          String   @id @default(uuid())
   name        String   
   description String?  
   basePrice   Decimal  @db.Decimal(8,2) // 8 dig en total, donde 2 son decimales 
   isActive    Boolean  @default(true)
 
-  // Relacion
+  // Relacion 
   skus        Sku[] // 1 -> N // modelado desde RAM (los datos vienen del servidor de postgre)
  
-  // Timestamps de auditoría 
+  // Timestamps
   createdAt   DateTime  @default(now())  
   updateAt    DateTime  @updatedAt
 
   @@map("products")
 }
-
-// representa la prenda física real -- se relaciona con Product (es foraneo)
 
 model Sku { 
   id         String   @id      @default(uuid())
@@ -85,7 +83,7 @@ model Cart {
   user      User      @relation(fields: [userId], references: [id]) //relation field (no ocupa esp, no es visible)
   
   // Rel 1 a N. UN carrito puede tener MUCHOS items ( prod + SKU )
-  items     CartItem[] // 
+  items     CartItem[] // UN caerrito puede teber muchos cart_items 
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -122,7 +120,7 @@ enum OrderStatus {
 }
 
 model Order { // resumen general de compra
-    id      String        @id @default(uuid()) 
+    id       String        @id @default(uuid()) 
   
     userId   String // pregunta importante userId seía FK de user ?
     user     User         @relation(fields: [userId], references: [id]) // traeme el user con id "userId"
@@ -146,10 +144,10 @@ model OrderItem { // lo entiendo como el total por cada item grupo de items del 
   priceUnity Decimal @db.Decimal(8,2)   // congelo precio
 
   // relacion con la orden padre
-  orderId    String
+  orderId    String // FK de order
   order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade) // relation field
 
-  skuId      String
+  skuId      String // FK de sku
   sku        Sku     @relation(fields: [skuId], references: [id]) // relation field
 
   @@map("order_items")
