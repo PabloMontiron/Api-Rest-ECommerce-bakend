@@ -1,14 +1,12 @@
 import { Router } from "express";
+import { getAllProducts } from "../services/product.service"; 
 
 const router = Router();
 
-router.get('/products', (req, res) => {
-    res.send('Obteniendo productos');
-});
+router.get("/products/",getAllProducts);
 
-router.get('/products/:id', (req, reS) => {
-    const { id } = req.params;
-    res.send('Obteniendo usuario con id: ' + id);
-})
+router.get("/products/:id",getProductById);
+
+
 
 export default router;

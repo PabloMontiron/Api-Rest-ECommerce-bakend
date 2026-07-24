@@ -3,6 +3,7 @@ import prisma from "../config/db.js";
 export const getAllProducts = async () => {
     try {
         const products = await prisma.product.findMany();
+        
      } catch (error) { 
         console.error("Error en getAllProducts: ",error);
         throw new Error("No se pudo obtener la lista de productos");
