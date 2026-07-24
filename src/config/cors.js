@@ -1,6 +1,6 @@
 import { PORT } from "./port.js"
 
-export const corsOpcion = {
+export const corsOption = {
 
     origin: (origin, callback) => {
         if (!origin || origin === `http://localhost:${PORT}`) { // si no tiene origen, o, el origen es esrtrictamente el fefinido se concede acceso
