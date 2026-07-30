@@ -3,7 +3,11 @@ import prisma from "../config/db.js";
 
 export const getAllProducts = async () => {
     try {
-        const products = await prisma.product.findMany();
+        const products = await prisma.product.findMany({
+         include: {
+            skus: true
+         }
+        });
         return products;
 
      } catch (error) { 
@@ -15,8 +19,9 @@ export const getAllProducts = async () => {
 export const getProductById = async (id) => {
    try {
       const product = await prisma.product.findUnique({
-         where: {
-            id: id
+         where: { id: id },
+         include: {
+            skus: true
          }
       })
       return product;
@@ -44,9 +49,7 @@ export const deleteProductById = async (id) => {
    try {
 
       const product= await prisma.product.delete({
-         where: {
-            id: id
-         }
+         where: { id: id }
       })
       return product;
 
@@ -59,12 +62,8 @@ export const deleteProductById = async (id) => {
 export const softDeleteProductById = async (id) => {
    try {
       const product = await prisma.product.update({
-         where: {
-            id: id
-         },
-         data: {
-               isActive: false
-            }
+         where: { id: id },
+         data: { isActive: false }
          });
       return product
 
@@ -77,12 +76,8 @@ export const softDeleteProductById = async (id) => {
 export const activateProductById = async (id) => {
    try {
       const product = await prisma.product.update({
-         where: {
-            id: id
-         },
-         data: {
-            isActive: true
-         }
+         where: { id: id },
+         data: { isActive: true }
       });
       return product
    

@@ -36,6 +36,8 @@ model Sku {
   productId  String // [F.K] escalar, crea una tabla con ese id de refercia 
   product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade) // data, no ocupa espacio. Verlo como un "cordon" que relaciona dos "objetos" separados entre si.
 
+  isActive   Boolean   @default(true)
+
   // UN SKU PERTENECE A UN CARTITEM?
   cartItmes  CartItem[] 
   orderItems OrderItem []
