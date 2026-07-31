@@ -11,7 +11,7 @@ export const createSku = async (skuData) => {
         return newSku;
 
     } catch (error) {
-        console.error("Error: ",error );
+        console.error("ERROR: ",error );
 
         throw new Error("Error al crear un Sku");
     }
@@ -36,7 +36,7 @@ export const updateSkuBySkuCode = async (skuCode,newData) => {
 // 3. GET - getAllStock
 export const getAllSkus = async () => {
     try {
-        const skus = await prisma.findMany();
+        const skus = await prisma.sku.findMany();
         return skus;
 
     } catch (error) {

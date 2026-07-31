@@ -12,11 +12,11 @@ import { createSku,
 const router = new Router();
 
 // routes
-router.post("/",createSku);
+router.post("/",createSku);// check
 
-router.get("/all",getAllSkus);
+router.get("/all",getAllSkus); // check
 
-router.get("/low-stock",getLowStockSkus);
+router.get("/low-stock",getLowStockSkus); 
 
 router.get("/:skuCode",getSkuBySkuCode);
 

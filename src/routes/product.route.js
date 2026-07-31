@@ -9,14 +9,14 @@ import {
 
 const router = Router();
 
-router.get("/products",getAllProducts); // ok
+router.get("/",getAllProducts); // ok
 
-router.get("/products/:id",getProductById); // ok
+router.get("/:id",getProductById); // ok
 
-router.post("/products",createProduct); // ok
+router.post("/",createProduct); // ok
  
-router.delete("/products/:id",deleteProductById); // ok
+router.delete("/:id",deleteProductById); // ok
 
-router.patch("/products/:id",softDeleteProductById); // ok
+router.patch("/:id",softDeleteProductById); // ok
 
 export default router;

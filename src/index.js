@@ -21,8 +21,8 @@ app.use((req,res,next) => { // middleware ( usa use() por lo tanto es middle)
 })
 
 
-app.use("/api/product", productRoutes); // middleware
-app.use("/api/sku", skuRoute); //middle
+app.use("/api/products", productRoutes); // middleware
+app.use("/api/skus", skuRoute); //middle
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`); 

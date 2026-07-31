@@ -1,4 +1,4 @@
-import { Result } from "pg";
+//import { Result } from "pg"; no va esto en controller. es de service
 import * as skuService from "../services/sku.service.js";
 
 //
