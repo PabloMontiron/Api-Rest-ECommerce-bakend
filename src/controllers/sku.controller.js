@@ -1,3 +1,4 @@
+import { Result } from "pg";
 import * as skuService from "../services/sku.service.js";
 
 //
@@ -7,7 +8,7 @@ export const createSku = async (req,res) => {
         const newSku = await skuService.createSku(data);
         
         res.status(201).json(newSku);
-        console.log("Sku creado exitosamente");
+        console.log("Sku creado exitosamente"); 
 
     } catch ( error ) { 
         console.error("error: ",error);
@@ -38,7 +39,7 @@ export const getAllSkus = async (req,res) => {
     try {
         const skus = await skuService.getAllSkus();
 
-        res.status(200);
+        res.status(200).json(skus);
 
     } catch (errror) {
         console.error("Error: ",error);
@@ -48,16 +49,43 @@ export const getAllSkus = async (req,res) => {
 };
 
 //
-export const getProductBySkuCode = async (req,res) => {
+export const getSkuBySkuCode = async (req,res) => {
     try {
         const skuCode = req.rarams.skuCode;
+
         const sku = await skuService.getProductBySkuCode(skuCode);
 
-        res.status(200).json({error: "Se obtuvo el producto exitosamente"}) // cartel dudoso
+        res.status(200).json(sku); 
 
     } catch (error) {
         console.error("Error: ",error);
         
-        res.status(500).json(); // >>> FALTA D E S A R R O L L A R <<<
+        res.status(500).json({error: "ocurrio un error al intentar encontrar el producto"}); 
     }
-}
+};
+
+//
+export const deleteSkuBySkuCode = async (req,res) => {
+    try {
+        const skuCode = req.params.skuCode;
+        const skuDelete = await skuService.deleteSkuBySkuCode(skuDelete);
+
+        res.status(200).json({message: `Sku COD: ${skuCode} ha sido eliminado`});
+    } catch (error) {
+        console.error("Error: ",error);
+        res.status(500).json({error: "Error al obtener el producto"});
+    }
+};
+
+//
+export const getLowStockSkus = async (req,res) => {
+    try {
+        const skusLowStock = await skuService.getLowStockSkus();
+
+        res.status(200).json(skusLowStock);
+
+    } catch (error) {
+        console.error("Error: ",error);
+        res.status(500).json({error: "Error al obtener lista de productos (skus)"})
+    }
+};

@@ -1,17 +1,29 @@
 import { Router } from "express";
 
-import { createSku } from "../controllers/sku.controller.js";
-import { updateSkuById } from "../services/sku.service.js";
+import { createSku, 
+         getAllSkus,
+         updateSkuBySkuCode, 
+         getSkuBySkuCode, 
+         deleteSkuBySkuCode,
+         getLowStockSkus 
+          } from "../controllers/sku.controller.js";
+
 
 const router = new Router();
 
-
 // routes
-router.post("/sku",createSku);
+router.post("/",createSku);
 
-router.patch("/sku/:id",updateSkuById);
+router.get("/all",getAllSkus);
+
+router.get("/low-stock",getLowStockSkus);
+
+router.get("/:skuCode",getSkuBySkuCode);
+
+router.patch("/:skuCode",updateSkuBySkuCode);
+
+router.delete("/:skuCode",deleteSkuBySkuCode);
 
 
-
-
+// 
 export default router;

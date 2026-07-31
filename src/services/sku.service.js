@@ -61,23 +61,7 @@ export const getProductBySkuCode = async (skuCode) => {
     }
 };
 
-// 5. PATCH sableSkuByCode
-export const disableSkuByCode = async (skuCode) => {
-    try {
-        const sku = await prisma.sku.findUnique({
-            where: {skuCode: skuCode},
-            data: {isActive: false}
-        })
-        return sku;
-
-    } catch (error) {
-        console.error("Error: ",error);
-
-        throw new (`ErrorNo se pudo desabilitar el sku con codigo ${skuCode}`);
-    }
-};
-
-// 6. DELETE - deleteSluBySkuCode(skuCode)
+// 5. DELETE - deleteSluBySkuCode(skuCode)
 export const deleteSkuBySkuCode = async (skuCode) => {
     try {
         const skuDelete = await prisma.sku.delete({
@@ -90,4 +74,27 @@ export const deleteSkuBySkuCode = async (skuCode) => {
 
         throw new Error("Error al intentar eliminar el producto");
     }
-}
+};
+
+// 6. GET
+export const getLowStockSkus = async () => {
+    try {
+        const skusList = await prisma.sku.findMany({
+            where: 
+            {   
+             stockMin: {
+                 not: null
+                },
+                
+              stockDisp: {
+                lte: prisma.sku.fields.stockMin // lte => Less than or Equal ( <= )
+              }  
+            }
+        });
+        return skusList;
+
+    } catch (error) {
+        console.error("Error: ",error);
+        throw new Error("No se puedo obtener la lista de stock por debajo del minimo");
+    }
+};
