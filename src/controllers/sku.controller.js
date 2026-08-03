@@ -1,7 +1,14 @@
 //import { Result } from "pg"; no va esto en controller. es de service
+
+/*Un SKU de ropa es un código único de letras y números para identificar cada prenda 
+por su modelo, color y talle. Cada variante de un producto 
+(como una remera azul en talle M) necesita su propio código para 
+controlar mejor el inventario
+*/
+
 import * as skuService from "../services/sku.service.js";
 
-//
+// 1.
 export const createSku = async (req,res) => {
     try {
         const data = req.body;
@@ -17,7 +24,37 @@ export const createSku = async (req,res) => {
     }
 };
 
-//
+// 2.
+export const getAllSkus = async (req,res) => {
+    try {
+        const skus = await skuService.getAllSkus();
+
+        res.status(200).json(skus);
+
+    } catch (errror) {
+        console.error("Error: ",error);
+
+        response.satatus(500).json({error: "Ocurrio un error al intentar ontener la lista de productos"});
+    } 
+};
+
+// 3.
+export const getSkuBySkuCode = async (req,res) => {
+    try {
+        const skuCode = req.params.skuCode;
+
+        const sku = await skuService.getSkuBySkuCode(skuCode);
+
+        res.status(200).json(sku); 
+
+    } catch (error) {
+        console.error("Error: ",error);
+        
+        res.status(500).json({error: "ocurrio un error al intentar encontrar el producto"}); 
+    }
+};
+
+// 4.
 export const updateSkuBySkuCode = async (req,res) => {
     try {
         const skuCode = req.params.skuCode; // capturo el skuCode esto se debe llamar igual que el params en routes /:skucode
@@ -34,41 +71,11 @@ export const updateSkuBySkuCode = async (req,res) => {
     }
 };
 
-//
-export const getAllSkus = async (req,res) => {
-    try {
-        const skus = await skuService.getAllSkus();
-
-        res.status(200).json(skus);
-
-    } catch (errror) {
-        console.error("Error: ",error);
-
-        response.satatus(500).json({error: "Ocurrio un error al intentar ontener la lista de productos"});
-    } 
-};
-
-//
-export const getSkuBySkuCode = async (req,res) => {
-    try {
-        const skuCode = req.rarams.skuCode;
-
-        const sku = await skuService.getProductBySkuCode(skuCode);
-
-        res.status(200).json(sku); 
-
-    } catch (error) {
-        console.error("Error: ",error);
-        
-        res.status(500).json({error: "ocurrio un error al intentar encontrar el producto"}); 
-    }
-};
-
-//
+// 6.
 export const deleteSkuBySkuCode = async (req,res) => {
     try {
         const skuCode = req.params.skuCode;
-        const skuDelete = await skuService.deleteSkuBySkuCode(skuDelete);
+        const skuDelete = await skuService.deleteSkuBySkuCode(skuCode);
 
         res.status(200).json({message: `Sku COD: ${skuCode} ha sido eliminado`});
     } catch (error) {
@@ -77,7 +84,7 @@ export const deleteSkuBySkuCode = async (req,res) => {
     }
 };
 
-//
+// 6.
 export const getLowStockSkus = async (req,res) => {
     try {
         const skusLowStock = await skuService.getLowStockSkus();

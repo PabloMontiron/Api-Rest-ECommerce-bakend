@@ -8,6 +8,7 @@ datasource db {
 }
 // Products & Skus //
 
+// ok
 model Product { 
   id          String   @id @default(uuid())
   name        String   
@@ -25,6 +26,7 @@ model Product {
   @@map("products")
 }
 
+// ok
 model Sku { 
   id         String   @id      @default(uuid())
   skuCode    String   @unique
@@ -56,25 +58,29 @@ enum Role {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  dni       String
-  nameUser  String
-  name      String
-  lastName  String
-  phone     String
+  id          String    @id @default(uuid())
+  dni         String    @unique
+  name        String
+  lastName    String
+  phone       String
+  
+  nameUser    String
+  email       String    @unique
+  password    String    
 
-  role      Role      @default(CUSTOMER) // Es solo asignacion
-  cart      Cart?     // es en si un campo se user? o mas bien de un USER que es customer?
-  orders    Order[]   // un usario puede tener muchas compras en un periodo de tiempo
+  role        Role      @default(CUSTOMER) 
+  cart        Cart?     // una compra  
+  orders      Order[]   // al finalizar pasa a su historial de compras en el array 
+  
+  isActive    Boolean   @default(true)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   // falta trabajar permisos, cliente o admin
   @@map("users")
 }
 
 // cart & cart item //
-
 model Cart {
   id        String    @id   @default(uuid())
 
@@ -120,18 +126,18 @@ enum OrderStatus {
 }
 
 model Order { // resumen general de compra
-    id       String        @id @default(uuid()) 
+    id         String        @id @default(uuid()) 
   
-    userId   String // pregunta importante userId seía FK de user ?
-    user     User         @relation(fields: [userId], references: [id]) // traeme el user con id "userId"
-    items    OrderItem [] // un Order (Padre) puede contener uno o mas order_items(sub-ticktes)
+    userId     String //     pregunta importante userId seía FK de user conectando pedido con usuario ?
+    user       User          @relation(fields: [userId], references: [id]) // traeme el user con id "userId"
+    items      OrderItem [] // un Order (Padre) puede contener uno o mas order_items(sub-ticktes)
 
-    amount   Decimal      @db.Decimal(8,2) // en el order superior va el total gral.
+    amount     Decimal       @db.Decimal(8,2) // en el order superior va el total gral.
 
-    status   OrderStatus  @default(PENDING) // Estado de la compra  (pendiente - pagao, caneclado, finalizado)
+    status     OrderStatus   @default(PENDING) // Estado de la compra  (pendiente - pagao, caneclado, finalizado)
     
-    createdAt  DateTime    @default(now())
-    updatedAt DateTime    @updatedAt
+    createdAt  DateTime      @default(now())
+    updatedAt  DateTime      @updatedAt
        
   @@map("orders")
 }
