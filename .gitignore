@@ -2,6 +2,6 @@ node_modules/
 referencias_capturas/
 /generated/prisma
 
-.txt
+*.txt
 .env
 .env.*

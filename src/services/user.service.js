@@ -1,4 +1,3 @@
-import { error } from "node:console";
 import prisma from "../config/db.js";
 
 // ---- USER ---- //
@@ -34,7 +33,7 @@ export const getUserById = async (id) => {
 };
 
 // 3. GET
-export const getAllUser = async() => {
+export const getAllUsers = async() => {
     try {
         const users = await prisma.user.findMany();
         return users;
