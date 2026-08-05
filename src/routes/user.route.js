@@ -14,19 +14,15 @@ const router = new Router();
 
 // ---- //
 
-router.post("/", createUser);
-
-router.get("/:id",getUserById);
-
-router.get("/all",getAllUsers);
-
-router.patch("/:id",updateUserById);
-
-router.get("/:id",getUserOrdersById);
-
-router.get("/",getInactiveUsers);
-
-router.patch("/:id",softDeleteUserById);
+// estaticas
+router.post("/",createUser); // check
+router.get("/all",getAllUsers); // check
+router.get("/inactive",getInactiveUsers); // check
+// dinamicas
+router.get("/:id",getUserById); // check
+router.patch("/:id",updateUserById); // check
+router.get("/:id/orders",getUserOrdersById); // check
+router.delete("/:id/delete",softDeleteUserById); // check
 
 // ---- //
 

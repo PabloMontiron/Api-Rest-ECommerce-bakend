@@ -3,11 +3,13 @@ import prisma from "../config/db.js";
 // ---- USER ---- //
 
 // 1. POST
-export const createUser = async(dataUser) => {
+export const createUser = async (dataUser) => {
     try {
         const newUser = await prisma.user.create({
             data: dataUser
         });
+    //
+    console.log("LLEGO A SERIVICE")
     return newUser;
 
     } catch (error) {
@@ -91,7 +93,7 @@ export const getInactiveUsers = async () => {
     }
 };
 
-// 7. PATCH
+// 7. DELETE
 export const softDeleteUserById = async (id) => {
     try {
         const softDeleteUser = await prisma.user.update({

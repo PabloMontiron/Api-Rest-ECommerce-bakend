@@ -64,7 +64,7 @@ model User {
   lastName    String
   phone       String
   
-  nameUser    String
+  userName    String
   email       String    @unique
   password    String    
 

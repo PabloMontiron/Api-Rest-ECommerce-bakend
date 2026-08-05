@@ -15,7 +15,8 @@ export const createUser = async (req,res) => {
 
     } catch (error) {
         console.error("ERROR: ",error);
-
+        //
+        console.log("CONTROLLER");
         res.status(500).json({error: "Ocurrio un error al intentar crear un usuario"});
     }
 };
@@ -72,9 +73,20 @@ export const updateUserById = async (req,res) => {
 export const getUserOrdersById = async (req,res) => {
     try {
         const id = req.params.id;
-        const ordes = await userService.getUserOrdersById(id);
+
+        const orders = await userService.getUserOrdersById(id);
+
+        /*
+        // ESTO NO ES RESPONSABILIDAD DE NODE, SINO DEL FRONT (REACT)
+        if (!orders || orders.length === 0) {
+            return res.status(201).json({
+                message: "El usuario aun no realizó ninguna compra"
+            });
+        }
+        */
 
         res.status(200).json(orders);
+
         console.log("Lista de ordenes, acceso exitoso");
 
     } catch (error) {
@@ -102,10 +114,10 @@ export const getInactiveUsers = async (req,res) => {
 // 7. PATHC softDeleteUserById
 export const softDeleteUserById = async (req,res) => {
     try {
-        const id = req.parms.id;
+        const id = req.params.id;
         const userHidden = await userService.softDeleteUserById(id);
 
-        res.status(200).json(userHidden);
+        res.status(201).json(userHidden);
         console.log("Usuario ocultado exitosamente");
 
     } catch (error) {
