@@ -13,7 +13,7 @@ export const createUser = async (dataUser) => {
             data: dataUser
         });
     //
-    console.log(" >>> LLEGO A SERIVICE <<< ")
+    console.log(" >>> LLEGO A SERIVICE <<< ");
     return newUser;
 
     } catch (error) {

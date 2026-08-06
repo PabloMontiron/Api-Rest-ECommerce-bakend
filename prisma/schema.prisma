@@ -107,7 +107,7 @@ model       CartItem { // se relaciona con el SKU (lo fisico de producto) - y de
 
   // relacion al SKU
   skuId     String
-  sku       Sku       @relation(fields: [skuId], references: [id]) // ¿ Por qué no iría onDelate: Cascade ? 
+  sku       Sku       @relation(fields: [skuId], references: [id]) 
 
   createdAt DateTime  @default(now())
   updateAt  DateTime  @updatedAt
