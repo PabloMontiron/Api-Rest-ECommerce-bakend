@@ -1,15 +1,19 @@
 import prisma from "../config/db.js";
-
+import bcrypt from "bcrypt";
 // ---- USER ---- //
 
 // 1. POST
 export const createUser = async (dataUser) => {
     try {
+        // encripto pass con 10 "saltRounds"
+        dataUser.password = await bcrypt.hash(dataUser.password,10);
+
         const newUser = await prisma.user.create({
+            // password se guarda ya encriptada
             data: dataUser
         });
     //
-    console.log("LLEGO A SERIVICE")
+    console.log(" >>> LLEGO A SERIVICE <<< ")
     return newUser;
 
     } catch (error) {
