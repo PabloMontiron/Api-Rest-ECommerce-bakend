@@ -6,7 +6,7 @@ const secretKey = process.env.JWT_KEY;
 
 export const generateToken = (user) => {
     // payload (qué es mas a detalle) - es un objeto literal
-    const payload = { id: user.id, role: user.rol };
+    const payload = { id: user.id, role: user.role };
 
-    return jwt.sign(payload, secretKey, { expiresIn: "1h"}); // firma (jwt.sign) // payload(cuerpo) // secretkey auth // tiempo de expiracion sesion
-}
+    return jwt.sign(payload, secretKey, { expiresIn: "1h"}); // firma (jwt.sign) // payload(contenido en json, elementos) // secretkey auth // tiempo de expiracion sesion
+};
