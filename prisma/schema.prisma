@@ -151,7 +151,7 @@ model OrderItem { // lo entiendo como el total por cada item grupo de items del 
 
   // relacion con la orden padre
   orderId    String // FK de order
-  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade) // relation field
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade) // Cascade => si borro la orden (el cascade es para Order, se borra OrderItems)
 
   skuId      String // FK de sku
   sku        Sku     @relation(fields: [skuId], references: [id]) // relation field

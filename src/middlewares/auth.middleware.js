@@ -15,7 +15,7 @@ export const authentication = (req, res, next) => {
         return res.status(401).json({error: "Acceso denegado. Token requerido"});
     };
 
-    // 3 . si el punto anterior esta OK, se extre el token puro. (se corta el string con .split(" ")[1] y se toma la posicion [1] que a la que le queda el token puro 
+    // 3 . si el punto anterior esta OK, se extre el token puro. (se corta el string con .split(" ")[1] y se toma la posicion [1], la cual posee el token puro 
     const token = authHeader.split(" ")[1];
     
     // 4. intenta try catch
@@ -33,3 +33,5 @@ export const authentication = (req, res, next) => {
         return res.status(403).json({ error: "Token inválido o expirado"});
     }
 };
+
+// pregunta: cuando hace el try catch, por qué desde ese punto y no antes? siempre que haya una request o responde debo usar el bloque try-catch? al igual que cuando deba esperar la respuesta de una BD
