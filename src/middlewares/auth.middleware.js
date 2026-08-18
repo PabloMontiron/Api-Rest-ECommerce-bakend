@@ -18,6 +18,7 @@ export const authentication = (req, res, next) => {
     // 3 . si el punto anterior esta OK, se extre el token puro. (se corta el string con .split(" ")[1] y se toma la posicion [1], la cual posee el token puro 
     const token = authHeader.split(" ")[1];
     
+    
     // 4. intenta try catch
     try {
         const decodedPayload = jwt.verify(token, secretKey); // es el token del bearer 

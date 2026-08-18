@@ -27,5 +27,4 @@ const adapter = new PrismaPg(pool);
 // 3. Se le pasa el adapter al constuctor
 const prisma = new PrismaClient({ adapter })
 
-
 export default prisma;

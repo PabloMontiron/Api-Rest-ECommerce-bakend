@@ -8,7 +8,8 @@ import { authentication } from "./middlewares/auth.middleware.js";
 import productRoutes from "./routes/product.route.js";
 import skuRoutes from "./routes/sku.route.js";
 import userRoutes from "./routes/user.route.js";
-import authRoutes from"./routes/auth.route.js";
+import authRoutes from "./routes/auth.route.js";
+import cartRoutes from "./routes/cart.route.js";
 //
 
 const app = express();
@@ -24,10 +25,11 @@ app.use((req,res,next) => { // middleware observador
     next();
 })
 //
-app.use("/api/products", productRoutes); // middleware
-app.use("/api/skus", skuRoutes); //middle
-app.use("/api/users", authentication, userRoutes);
-app.use("/api/auth", authRoutes);
+app.use("/api/products",productRoutes); 
+app.use("/api/skus",skuRoutes); 
+app.use("/api/users",userRoutes);
+app.use("/api/auth",authRoutes);
+app.use("/api/cart",cartRoutes);
 //
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`); 

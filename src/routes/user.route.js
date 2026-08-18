@@ -10,19 +10,21 @@ import {
     softDeleteUserById
 } from "../controllers/user.controller.js";
 
+import { authentication } from "../middlewares/auth.middleware.js";
+
 const router = new Router();
 
 // ---- //
 
 // estaticas
 router.post("/",createUser); // check
-router.get("/all",getAllUsers); // check
-router.get("/inactive",getInactiveUsers); // check
+router.get("/all",authentication,getAllUsers); // check
+router.get("/inactive",authentication,getInactiveUsers); // check
 // dinamicas
-router.get("/:id",getUserById); // check
-router.patch("/:id",updateUserById); // check
-router.get("/:id/orders",getUserOrdersById); // check
-router.delete("/:id/delete",softDeleteUserById); // check
+router.get("/:id",authentication,getUserById); // check
+router.patch("/:id",authentication,updateUserById); // check
+router.get("/:id/orders",authentication,getUserOrdersById); // check
+router.delete("/:id/delete",authentication,softDeleteUserById); // check
 
 // ---- //
 
